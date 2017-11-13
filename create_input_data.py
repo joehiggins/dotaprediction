@@ -33,14 +33,18 @@ account_ids = np.unique(account_ids)
 
 #get all unique player account_ids
 a = pd.Series(list(
-     zip(list(df['player_0_account_id']),
-         list(df['player_1_account_id']),
-         list(df['player_2_account_id']),
-         list(df['player_3_account_id']),
-         list(df['player_4_account_id']),
+     zip(list(map(str, df['player_0_account_id'])),
+         list(map(str, df['player_1_account_id'])),
+         list(map(str, df['player_2_account_id'])),
+         list(map(str, df['player_3_account_id'])),
+         list(map(str, df['player_4_account_id'])),
     )
 ))
-a = list(map(list, a))
+a = pd.DataFrame(a)
+b = a.head(5)
+b = b[0].str.join(sep='*').str.get_dummies(sep='*')
+
+
 
 pd.get_dummies(a)
 
