@@ -33,7 +33,7 @@ NUM_VARIABLES = np.shape(X_train)[1]
 
 model = Sequential()
 model.add(Dense(units=NUM_OUTPUT_UNITS, input_dim=NUM_VARIABLES, activation='relu')) 
-model.add(Dense(math.floor(np.shape(X_train)[1]/2), input_dim=NUM_VARIABLES, activation='relu'))
+model.add(Dense(math.floor(np.shape(X_train)[1]/2), activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
