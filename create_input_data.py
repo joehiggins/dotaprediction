@@ -103,8 +103,8 @@ all_features['radiant_win'] = list(df['radiant_win'])
 
 train_pct = 0.90
 msk = np.random.rand(len(df)) < train_pct
-df_train = all_features [msk]
-df_dev = all_features [~msk]
+df_train = all_features[msk]
+df_dev = all_features[~msk]
 
 #Save output
 file_path = '/Users/josephhiggins/Documents/CS 229/Project/Input Data/'
