@@ -96,8 +96,8 @@ team_indicators = pd.concat([radiant_team, dire_team], axis = 1)
 team_indicators = team_indicators.set_index(np.arange(0,np.shape(team_indicators)[0]))
 
 #create train/dev set
-#all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
-all_features = pd.concat([team_indicators], axis = 1)
+all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
+#all_features = pd.concat([team_indicators], axis = 1)
 all_features['match_id'] = list(df['match_id'])
 all_features['radiant_win'] = list(df['radiant_win'])
 

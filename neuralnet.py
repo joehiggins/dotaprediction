@@ -27,13 +27,13 @@ y_dev = df_dev['radiant_win']
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 
-# questions: what are units
 NUM_OUTPUT_UNITS = 1
 NUM_VARIABLES = np.shape(X_train)[1]
 
 model = Sequential()
 model.add(Dense(units=NUM_OUTPUT_UNITS, input_dim=NUM_VARIABLES, activation='relu')) 
-model.add(Dense(math.floor(np.shape(X_train)[1]/2), activation='relu'))
+model.add(Dense(math.floor(NUM_VARIABLES/2), activation='relu'))
+model.add(Dense(8, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -45,6 +45,8 @@ train_error = model.evaluate(X_train.values, y_train)
 dev_error = model.evaluate(X_dev.values, y_dev)
 print(dev_error)
 
+dev_predictions = model.predict(X_dev.values)
+dev_predictions = [round(x[0]) for x in dev_predictions]
 model.metrics_names
 
 ##########################
