@@ -10,6 +10,8 @@ import os
 import pandas as pd
 import numpy as np
 import datetime
+import time
+start_time = time.time()
 
 output = {}
 
