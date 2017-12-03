@@ -25,6 +25,7 @@ import numpy as np
 import datetime
 import time
 import collections
+import matplotlib.pyplot as plt
 
 output = []
 
@@ -100,7 +101,45 @@ def create_match_player_level_data()
     file_path = '/Users/josephhiggins/Documents/CS 229/Project/Tabular Data/'
     file_name = 'dota2_pro_match_player_level_data.pkl'
     output.to_pickle(file_path + file_name)
-        
-        
-        
-        
+
+def create_rolling_mean_of_field(data, field, window):
+    #Creates rolling average for a given field for a given window, but if fewer windows are observed it uses what it as
+    #Also shifts up by 1 so that we dont use data from the current match to predict
+    data['rolling'] = data.groupby(['account_id'])[field].apply(pd.rolling_mean, window=window, min_periods= 1).shift(1)
+    
+    #Sets the first value for each player to NaN since shift moved the final value from the previous player up
+    #Makes sense because we have no observations for the GPM of a player in the first game they play
+    rolling = data.groupby(['account_id'])['rolling'].apply(set_first_value_to_nan)
+    
+    return rolling
+
+def set_first_value_to_nan(group):
+    group.iloc[0] = np.nan
+    return group
+
+def create_player_match_running_averages():
+    #Read in data
+    file_path = '/Users/josephhiggins/Documents/CS 229/Project/Tabular Data/'
+    file_name = 'dota2_pro_match_player_level_data.pkl'
+    df = pd.read_pickle(file_path + file_name)
+    
+    df = df.sort_values(['account_id', 'match_id'])
+    print('preparing GPM...')
+    df['gold_per_min_10trail'] = create_rolling_mean_of_field(df, 'gold_per_min', 10)
+    print('preparing XPM...')
+    df['xp_per_min_10trail'] = create_rolling_mean_of_field(df, 'xp_per_min', 10)
+    print('preparing KPM...')
+    df['kills_per_min_10trail'] = create_rolling_mean_of_field(df, 'kills_per_min', 10)
+    print('preparing LE...')
+    df['lane_efficiency_10trail'] = create_rolling_mean_of_field(df, 'lane_efficiency', 10)
+    
+    '''
+    df.groupby(['account_id']).apply(len)
+    df[['account_id','xp_per_min','xp_per_min_10trail']][df['account_id'].isin([88470])]
+    df[['account_id','kills_per_min','kills_per_min_10trail']][df['account_id'].isin([88470])]
+    df[['account_id','lane_efficiency','lane_efficiency_10trail']][df['account_id'].isin([88470])]
+    plt.scatter(df['gold_per_min_10trail'], df['gold_per_min'], s = 2)
+    plt.scatter(df['xp_per_min_10trail'], df['xp_per_min'], s = 2)
+    plt.scatter(df['kills_per_min_10trail'], df['kills_per_min'], s = 2)
+    plt.scatter(df['lane_efficiency_10trail'], df['lane_efficiency'], s = 2)
+    '''
