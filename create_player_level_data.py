@@ -132,6 +132,9 @@ def create_player_match_running_averages():
     df['kills_per_min_10trail'] = create_rolling_mean_of_field(df, 'kills_per_min', 10)
     print('preparing LE...')
     df['lane_efficiency_10trail'] = create_rolling_mean_of_field(df, 'lane_efficiency', 10)
+
+    file_name = 'dota2_pro_match_player_level_rolling_data.pkl'
+    df.to_pickle(file_path + file_name)
     
     '''
     df.groupby(['account_id']).apply(len)
