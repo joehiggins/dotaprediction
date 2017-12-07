@@ -12,10 +12,10 @@ import numpy as np
 import math
 from sklearn import svm
 
-CROSS_TRAIN = True
+CROSS_TRAIN = False
 
-file_path = '/Users/josephhiggins/Documents/CS 229/Project/dotaprediction/Tabular Data/'
-file_name = 'dota2_pro_match_tabular_data.pkl'
+file_path = '/Users/josephhiggins/Documents/CS 229/Project/Tabular Data/'
+file_name = 'dota2_pro_merged_data.pkl'
 df = pd.read_pickle(file_path + file_name)
 
 #filter out nulls
@@ -25,7 +25,7 @@ df = df[~pd.isnull(df['radiant_picks'])]
 cutoff_date = '2017-05-01'
 df = df[df['start_date'] <= cutoff_date]
 
-#get hero pick indicators for training data
+#FEATURE SET 1: get hero pick indicators for training data
 radiant_picks = df['radiant_picks']
 radiant_picks = list(map(lambda x: 
         list(map(lambda y: str(y), x))
@@ -84,7 +84,25 @@ dire_players = pd.Series(dire_players)
 dire_players = pd.DataFrame(dire_players)
 dire_players = dire_players[0].str.join(sep='*').str.get_dummies(sep='*')
 '''
-#get team indicators for training data
+#FEATURE SET 2: get hero pick indicators for training data
+player_fields_to_grab = [
+        'xp_per_min_10trail', 
+        'gold_per_min_10trail',
+        'kills_per_min_10trail',
+        'lane_efficiency_10trail',
+        'solo_competitive_rank'
+]
+
+player_fields_prefixed = []
+for player_number in np.arange(0,10):
+    for field in player_fields_to_grab:
+        player_number_string= 'player_' + str(player_number)
+        player_fields_prefixed.append(player_number_string + '_' + field)
+        
+player_metrics = df[player_fields_prefixed]
+player_metrics = player_metrics.reset_index()
+
+#FEATURE SET 3:get team indicators for training data
 radiant_team = df['radiant_name']
 radiant_team = pd.get_dummies(radiant_team)
 
@@ -99,10 +117,12 @@ team_indicators = team_indicators.set_index(np.arange(0,np.shape(team_indicators
 
 #create train/dev set
 
+#all_features = pd.concat([pick_indicators, team_indicators, player_metrics], axis = 1)
 all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
 #all_features = pd.concat([team_indicators], axis = 1)
 all_features['match_id'] = list(df['match_id'])
 all_features['radiant_win'] = list(df['radiant_win'])
+
 
 #Save output
 file_path = '/Users/josephhiggins/Documents/CS 229/Project/Input Data/'
@@ -121,7 +141,7 @@ if CROSS_TRAIN == False:
 else:
     #for cross train
     df.to_pickle(file_path + file_name)
-    file_name = 'dota2_pro_match_input_data_all.pkl
+    file_name = 'dota2_pro_match_input_data_all.pkl'
 
 
     
