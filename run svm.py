@@ -58,13 +58,13 @@ dev_size = np.shape(output)[0]
 pct_correct = correct_predictions/dev_size
 pct_correct
 
-
+'''
 #Sparse version
 X_train_sparse = sp.sparse.csr_matrix(X_train)
 X_dev_sparse = sp.sparse.csr_matrix(X_dev)
 
 #clf = svm.LinearSVC()
-clf = svm.SVC(kernel='linear',C=2)
+clf = svm.SVC(kernel='linear',C=0.5)
 
 clf.fit(X_train_sparse, y_train)
 predictions = clf.predict(X_dev_sparse)
@@ -80,3 +80,4 @@ dev_size = np.shape(output)[0]
 
 pct_correct = correct_predictions/dev_size
 pct_correct
+'''
