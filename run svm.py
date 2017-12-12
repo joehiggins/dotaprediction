@@ -12,13 +12,15 @@ import numpy as np
 import math
 import scipy as sp
 from sklearn import svm
-from sklearn.preprocessing import Imputer
 from matplotlib import pyplot as plt
 
 #Read in data
 file_path = '/Users/josephhiggins/Documents/CS 229/Project/Input Data/'
-file_name = 'dota2_pro_match_input_data_train.pkl'
-df_train = pd.read_pickle(file_path + file_name)
+file_name = 'dota2_pro_match_input_data_train1.pkl'
+df_train1 = pd.read_pickle(file_path + file_name)
+file_name = 'dota2_pro_match_input_data_train2.pkl'
+df_train2 = pd.read_pickle(file_path + file_name)
+df_train = df_train1.append(df_train2)
 
 file_name = 'dota2_pro_match_input_data_dev.pkl'
 df_dev = pd.read_pickle(file_path + file_name)
@@ -31,19 +33,14 @@ X_dev = df_dev.drop({'radiant_win', 'match_id', 'start_date'}, axis = 1)
 y_dev = df_dev['radiant_win']
 
 
+X_dev.isnull().values.any()
+X_dev.isnull().sum()
+
+
 #Run model
 #clf = svm.SVC()
 clf = svm.LinearSVC()
-'''
-imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
-imp.fit(X_train)
-train_imp = imp.transform(X_train)
-dev_imp = imp.transform(X_dev)
 
-clf.fit(train_imp, y_train)
-train_predictions = clf.predict(train_imp)
-dev_predictions = clf.predict(dev_imp)
-'''
 clf.fit(X_train, y_train)
 train_predictions = clf.predict(X_train)
 dev_predictions = clf.predict(X_dev)
@@ -122,9 +119,6 @@ output['Jul'] = np.sum(Jul_correct == True)/Jul.shape[0]
 output['Aug'] = np.sum(Aug_correct == True)/Aug.shape[0]
 output['Sep'] = np.sum(Sep_correct == True)/Sep.shape[0]
 output['Oct'] = np.sum(Oct_correct == True)/Oct.shape[0]
-
-for key, value in output:
-    print(key, value)
 
 
 '''
