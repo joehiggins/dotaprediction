@@ -10,7 +10,8 @@ import os
 import pandas as pd
 import numpy as np
 import math
-from sklearn import svm
+import scipy as sp
+from sklearn.preprocessing import Imputer
 
 CROSS_TRAIN = False
 
@@ -81,19 +82,37 @@ team_indicators = team_indicators.set_index(np.arange(0,np.shape(team_indicators
 
 #create train/dev/test set
 
-#all_features = pd.concat([pick_indicators, team_indicators, player_metrics], axis = 1)
+all_features = pd.concat([pick_indicators, team_indicators, player_metrics], axis = 1)
 #all_features = pd.concat([pick_indicators, player_metrics], axis = 1)
-all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
+#all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
 #all_features = pd.concat([pick_indicators], axis = 1)
 #all_features = pd.concat([team_indicators], axis = 1)
-all_features['match_id'] = list(df['match_id'])
-all_features['radiant_win'] = list(df['radiant_win'])
-all_features['start_date'] = list(df['start_date'])
+
+#Fill in Nans
+player_metrics_include = True
+if player_metrics_include == True:
+    imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
+    imp.fit(all_features)
+    imputed = imp.transform(all_features)
+
+all_features_imputed = pd.DataFrame(imputed, columns = all_features.columns)
+
+#convert data to zscores
+all_features_zscore = all_features_imputed.apply(sp.stats.zscore, axis = 0)
+'''
+pd.DataFrame({'pre impute': all_features['player_9_solo_competitive_rank'],
+              'post impute': all_features_imputed['player_9_solo_competitive_rank'],
+              'zscore': all_features_zscore['player_9_solo_competitive_rank']})
+'''
+#append tracking columns
+all_features_zscore['match_id'] = list(df['match_id'])
+all_features_zscore['radiant_win'] = list(df['radiant_win'])
+all_features_zscore['start_date'] = list(df['start_date'])
 
 #filter to before cutoff date
 cutoff_date = '2017-05-01'
-all_features_non_test = all_features[all_features['start_date'] <= cutoff_date]
-all_features_test = all_features[all_features['start_date'] > cutoff_date]
+all_features_non_test = all_features_zscore[all_features_zscore['start_date'] <= cutoff_date]
+all_features_test = all_features_zscore[all_features_zscore['start_date'] > cutoff_date]
 
 #Save output
 file_path = '/Users/josephhiggins/Documents/CS 229/Project/Input Data/'
@@ -105,8 +124,14 @@ if CROSS_TRAIN == False:
     df_dev = all_features_non_test[~msk]
     df_test = all_features_test
     
-    file_name = 'dota2_pro_match_input_data_train.pkl'
-    df_train.to_pickle(file_path + file_name)
+    df_train_part1 = df_train.iloc[:round(len(df_train)/2), :]
+    df_train_part2 = df_train.iloc[round(len(df_train)/2+1):, :]
+    
+    file_name = 'dota2_pro_match_input_data_train1.pkl'
+    df_train_part1.to_pickle(file_path + file_name)
+
+    file_name = 'dota2_pro_match_input_data_train2.pkl'
+    df_train_part2.to_pickle(file_path + file_name)
 
     file_name = 'dota2_pro_match_input_data_dev.pkl'
     df_dev.to_pickle(file_path + file_name)
