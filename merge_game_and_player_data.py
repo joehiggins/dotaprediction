@@ -62,4 +62,8 @@ merged_data.to_pickle(file_path + file_name)
 s_game_data = game_data[game_data['match_id'] == 3540226851]
 s_player_data = player_data[player_data['match_id'] == 3540226851]
 merged_data[merged_data['match_id'] == 3540226851]
+
+s_game_data = game_data[game_data['match_id'] == 3148788120]
+s_player_data = player_data[player_data['match_id'] == 3148788120]
+merged_data[merged_data['match_id'] == 3148788120]
 '''
