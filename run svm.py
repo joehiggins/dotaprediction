@@ -32,14 +32,9 @@ y_train = df_train['radiant_win']
 X_dev = df_dev.drop({'radiant_win', 'match_id', 'start_date'}, axis = 1)
 y_dev = df_dev['radiant_win']
 
-
-X_dev.isnull().values.any()
-X_dev.isnull().sum()
-
-
 #Run model
 #clf = svm.SVC()
-clf = svm.LinearSVC()
+clf = svm.LinearSVC(C = 2)
 
 clf.fit(X_train, y_train)
 train_predictions = clf.predict(X_train)
