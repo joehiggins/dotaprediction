@@ -16,7 +16,8 @@ start_time = time.time()
 output = {}
 
 #Get all the match detail files we need to iterate through
-os.chdir('/Users/josephhiggins/Documents/CS 229/Project/Pro Match Details/')
+os.chdir('/Users/petragrutzik/CSClasses/CS229/dota/DotaData/')
+file_path = '/Users/petragrutzik/CSClasses/CS229/dota/DotaData/'
 file_names = os.listdir(file_path)
 
 def get_team_selections(picks_bans, selection_is_pick, selection_team):
@@ -90,6 +91,6 @@ for file_name in file_names:
 
 output = pd.DataFrame(output).transpose()
 
-file_path = '/Users/josephhiggins/Documents/CS 229/Project/Tabular Data/'
+file_path = '/Users/petragrutzik/CSClasses/CS229/dota/dotaprediction/Tabular Data/'
 file_name = 'dota2_pro_match_tabular_data.pkl'
 output.to_pickle(file_path + file_name)

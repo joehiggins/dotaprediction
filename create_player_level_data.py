@@ -30,8 +30,8 @@ import matplotlib.pyplot as plt
 output = []
 
 #Get all the match detail files we need to iterate through
-os.chdir('/Users/josephhiggins/Documents/CS 229/Project/Pro Match Details/')
-file_path = '/Users/josephhiggins/Documents/CS 229/Project/Pro Match Details/'
+os.chdir('/Users/petragrutzik/CSClasses/CS229/dota/DotaData/')
+file_path = '/Users/petragrutzik/CSClasses/CS229/dota/DotaData/'
 file_names = os.listdir(file_path)
 file_names.remove('.DS_Store')
 
@@ -56,7 +56,7 @@ def get_player_stats_from_within_match(players):
     player_information = pd.DataFrame(od).as_matrix()
     return player_information
 
-def create_match_player_level_data()
+def create_match_player_level_data(file_names, file_path, output):
     iteration = 0
     total = len(file_names)
     start_time = time.time()
@@ -98,7 +98,7 @@ def create_match_player_level_data()
         11: "assists"
     })
     
-    file_path = '/Users/josephhiggins/Documents/CS 229/Project/Tabular Data/'
+    file_path = '/Users/petragrutzik/CSClasses/CS229/dota/Tabular Data/'
     file_name = 'dota2_pro_match_player_level_data.pkl'
     output.to_pickle(file_path + file_name)
 
@@ -119,7 +119,7 @@ def set_first_value_to_nan(group):
 
 def create_player_match_running_averages():
     #Read in data
-    file_path = '/Users/josephhiggins/Documents/CS 229/Project/Tabular Data/'
+    file_path = '/Users/petragrutzik/CSClasses/CS229/dota/Tabular Data/'
     file_name = 'dota2_pro_match_player_level_data.pkl'
     df = pd.read_pickle(file_path + file_name)
     
@@ -146,3 +146,6 @@ def create_player_match_running_averages():
     plt.scatter(df['kills_per_min_10trail'], df['kills_per_min'], s = 2)
     plt.scatter(df['lane_efficiency_10trail'], df['lane_efficiency'], s = 2)
     '''
+
+create_match_player_level_data(file_names, file_path, output)
+create_player_match_running_averages()
