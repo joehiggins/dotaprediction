@@ -82,9 +82,9 @@ team_indicators = team_indicators.set_index(np.arange(0,np.shape(team_indicators
 
 #create train/dev/test set
 
-all_features = pd.concat([pick_indicators, team_indicators, player_metrics], axis = 1)
+#all_features = pd.concat([pick_indicators, team_indicators, player_metrics], axis = 1)
 #all_features = pd.concat([pick_indicators, player_metrics], axis = 1)
-#all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
+all_features = pd.concat([pick_indicators, team_indicators], axis = 1)
 #all_features = pd.concat([pick_indicators], axis = 1)
 #all_features = pd.concat([team_indicators], axis = 1)
 
@@ -98,12 +98,9 @@ if player_metrics_include == True:
 all_features_imputed = pd.DataFrame(imputed, columns = all_features.columns)
 
 #convert data to zscores
-all_features_zscore = all_features_imputed.apply(sp.stats.zscore, axis = 0)
-'''
-pd.DataFrame({'pre impute': all_features['player_9_solo_competitive_rank'],
-              'post impute': all_features_imputed['player_9_solo_competitive_rank'],
-              'zscore': all_features_zscore['player_9_solo_competitive_rank']})
-'''
+#all_features_zscore = all_features_imputed.apply(sp.stats.zscore, axis = 0)
+all_features_zscore = all_features_imputed
+
 #append tracking columns
 all_features_zscore['match_id'] = list(df['match_id'])
 all_features_zscore['radiant_win'] = list(df['radiant_win'])
