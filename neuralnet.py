@@ -38,7 +38,7 @@ NUM_OUTPUT_UNITS = 1
 NUM_VARIABLES = np.shape(df_all)[1] - 2 # because to train, we will later drop 2 columns:'radiant_win', 'match_id'
 
 model = Sequential()
-model.add(Dense(units=NUM_OUTPUT_UNITS, input_dim=NUM_VARIABLES, activation='relu')) 
+model.add(Dense(units=NUM_VARIABLES, input_dim=NUM_VARIABLES, activation='relu')) 
 model.add(Dense(math.floor(NUM_VARIABLES/2), activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
